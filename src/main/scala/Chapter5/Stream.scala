@@ -1,5 +1,7 @@
 package Chapter5
 
+import scala.annotation.tailrec
+
 sealed trait Stream[+A] {
 
    def toList: List[A]
@@ -77,6 +79,25 @@ case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A] {
 }
 
 object Stream {
+                               // f(4) = f(3) + f(2) =         f(1) +f(0) + f(1) +     f(1) + f(0)
+   def fibsRecursive(): Stream[Int] = {
+      def fibsInternal(n: Int, acc: Int): Int = n match {
+         case 0 => 0
+         case 1 => 1
+         case d => fibsInternal(d - 1 + d -  2)
+      }
+      from(0) map fibsInternal
+   }
+
+   def fibs(): Stream[Int] = {
+      @tailrec
+      def fibsInternal(n1: Int, n2: Int, acc: Int)(f: (Int, Int) => Int): Int = if (acc > 0) fibsInternal(n2, f(n1, n2), acc - 1)(f) else n1
+
+      from(0).map(fibsInternal(0, 1, _)((a, b) => a + b))
+   }
+
+   def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = ???
+
    def cons[A](hd: => A, tl: => Stream[A]): Stream[A] = {
       lazy val head = hd
       lazy val tail = tl

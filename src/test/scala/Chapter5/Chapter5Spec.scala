@@ -90,4 +90,11 @@ class Chapter5Spec extends FlatSpec {
       Stream.from(2).take(5).toList shouldBe List(2, 3, 4, 5, 6)
    }
 
+   "Exercise 5.10" should "should generate infinite stream of fibonacci" in {
+      Stream.fibs().take(1).toList shouldBe List(0)
+      Stream.fibs().take(2).toList shouldBe List(0, 1)
+      Stream.fibs().take(3).toList shouldBe List(0, 1, 1)
+      Stream.fibs().take(8).toList shouldBe List(0, 1, 1, 2, 3, 5, 8, 13)
+   }
+
 }
